@@ -1,0 +1,214 @@
+<!-- Load the Polymer.Element base class -->
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
+<dom-module id="my-timeseries">
+    <!-- Defines the element's style and local DOM -->
+    <template>
+        <style>
+        :host {
+            display: block;
+
+            padding: 16px;
+        }
+
+        /*paper-button.apply_button {
+            color: white;
+            background: #3f51b5;
+            border: 1px #303f94 solid;
+            box-shadow: inset 0 1px 0 #303f94;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+            border-bottom-left-radius: 5px;
+            padding: 6px;
+
+        }
+
+        paper-button.apply_button:hover {
+            border: 1px #d43913 solid;
+            box-shadow: 0 1px 1px #d43913, inset 0 1px 0 #d43913;
+            background: #dd2c00;
+        }
+
+        paper-button.apply_button:active {
+            box-shadow: inset 0 2px 5px #2370FE;
+        }
+
+        paper-button {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+*/
+              
+        paper-button{
+            color: #dd2c00;
+            background-color: #3f51b5;
+            color: white;
+            
+        }
+        paper-button:hover{
+            color: #3f51b5;
+            background-color: #dd2c00;
+            
+        }
+        .nameofparameter {
+            color: #737373;
+            padding-top: 0px;
+            padding-right: 6px;
+            padding-bottom: 0px;
+            padding-left: 6px;
+
+        }
+
+        .parameterBorder {
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+            border-bottom-left-radius: 5px;
+
+            padding-top: 0px;
+            padding-right: 6px;
+            padding-bottom: 0px;
+            padding-left: 6px;
+            margin: 1em;
+
+        }
+
+        .wrap {
+            display: -webkit-box;
+        }
+
+        .line {
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 1.5px;
+        }
+
+        .zoom {
+            cursor: move;
+            fill: none;
+            pointer-events: all;
+        }
+        </style>
+        
+        <iron-ajax 
+        id="ajaxGetPatterns" 
+        method="get"
+        auto 
+        url="http://localhost:8081/algorithm/parameters/get-patterns" 
+        handle-as="json" 
+        on-response="handleResponse" 
+        debounce-duration="300"
+        last-response="{{ShowPatterns}}">
+        </iron-ajax>
+         
+        <h1 align="center">Time Series Data Analysis</h1>
+        <td colspan="2">
+            <div align="center"><b>Patterns<b><br>
+              <textarea name="Patterns" cols="160" rows="30" value="[[ShowPatterns]]"></textarea>
+            </div>
+            
+        </td>
+
+
+    <form>
+        <br>
+        <br><br>
+        <div class="wrap">
+            <div>
+                <b>Time Series:<b>
+
+                <label class="nameofparameter">MinSupport </label>
+                <iron-input slot="input" bind-value="{{MinSupportData}}">
+                <input class="parameterBorder" id="MinSupport" type="text" name="MinSupport", value="{{MinSupportData::input}}">
+                </iron-input>
+
+                <span></span>
+            </div>
+            <div>
+                <label class="nameofparameter">MaxPatternLength </label>
+                <iron-input slot="input" bind-value="{{MaxPatternLengthData}}">
+                <input class="parameterBorder" id="MaxPatternLength" type="text" name="MaxPatternLength", value="{{MaxPatternLengthData::input}}">
+                </iron-input>
+                
+
+            </div>
+        </div>
+
+         <div class="wrap">
+
+            <div>
+               <b>Pattern Property:</b>
+                <label class="nameofparameter">Length</label> 
+                <iron-input slot="input" bind-value="{{LengthData}}">
+                <input class="parameterBorder" id="Length" type="text" name="Length", value="{{LengthData::input}}">
+                </iron-input>
+                
+            </div>
+
+            <div>
+                <label class="nameofparameter">Number Of Patterns</label>
+                <iron-input slot="input" bind-value="{{NumberOfPatternsData}}">
+                <input class="parameterBorder" id="NumberOfPatterns" type="text" name="NumberOfPatterns", value="{{NumberOfPatternsData::input}}">
+                </iron-input>
+
+            </div>
+            
+             <paper-button raised on-tap="apply" >Apply</paper-button>
+            
+        </div>
+
+    </form>
+
+  </template>
+  <script>
+    class MyTimeseries extends Polymer.Element{
+      static get is (){return 'my-timeseries';}
+      static get properties() {
+          return {
+              MinSupportData: {
+                type: String,
+                value:'0.1',
+                notify: true,
+                reflectToAttribute: true
+              },
+              MaxPatternLengthData: {
+                type: String,
+                value:'10',
+                notify: true,
+                reflectToAttribute: true
+              },
+              Patterns:{
+                type:String,
+                value:"xianshi"
+              },
+              LengthData:{
+                type:String,
+                value:"all",
+                notify: true,
+                reflectToAttribute: true
+              },
+              NumberOfPatternsData:{
+                type:String,
+                value:"all" ,
+                notify: true,
+                reflectToAttribute: true
+              },
+              error: String
+          }
+      }
+
+      apply(){
+        // alert(this.MinSupportData)
+        // alert(this.MaxPatternLengthData)
+        this.$.ajaxGetPatterns.set( 'params', {"MinSupport": this.MinSupportData, "MaxPatternLength": this.MaxPatternLengthData, "Length": this.LengthData, "NumberOfPatterns": this.NumberOfPatternsData});
+        this.$.ajaxGetPatterns.generateRequest();
+      }
+      
+    }
+    window.customElements.define(MyTimeseries.is,MyTimeseries);
+  </script>
+</dom-module>

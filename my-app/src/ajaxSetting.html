@@ -1,0 +1,10 @@
+ <iron-ajax 
+        id="ajaxGetPatterns" 
+        method="get"
+        auto 
+        url="http://localhost:8081/algorithm/parameters/get-patterns" 
+        handle-as="json" 
+        on-response="handleResponse" 
+        debounce-duration="300"
+        last-response="{{ShowPatterns}}">
+</iron-ajax>
