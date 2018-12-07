@@ -39,22 +39,34 @@ public class ParameterController {
 
         @RequestMapping(value = "/algorithm/parameters/get-patterns", method = RequestMethod.GET)
         @CrossOrigin
-        public List<String> PatternCal(@RequestParam(value = "MinSupport", required = true) float MinSupport, @RequestParam(value = "MaxPatternLength", required = true) int MaxPatternLength)
+        public String PatternCal(@RequestParam(value = "MinSupport", required = true) float MinSupport, @RequestParam(value = "MaxPatternLength", required = true) int MaxPatternLength)
         {
             //保存返回值的变量，具体以后什么类型，什么名字，什么方式返回之后整理算法的时候再进行调整。
             List<String> PatternResult;
             Para para=new Para();
+            String s="";
 
-//          PatternDiscovery patternDiscovery=new PatternDiscovery(Win_Size,Paa_Size,Alphabet_Size,Norm_Threshold);
+
+
             PrefixSpanPattern prefixSpanPattern=new PrefixSpanPattern(MinSupport,MaxPatternLength);
             PatternResult = prefixSpanPattern.getPattern();
 
 
-            System.out.println(MinSupport);
-            System.out.println(MaxPatternLength);
+            for(String pattern : PatternResult)    {
+                s+=pattern;
+
+            }
+//            s.lstrip();
+
+//            System.out.println(s);
+//
+//
+//            System.out.println(MinSupport);
+//            System.out.println(MaxPatternLength);
 
 
-            return PatternResult;
+//            return PatternResult;
+            return s;
 
 
         }

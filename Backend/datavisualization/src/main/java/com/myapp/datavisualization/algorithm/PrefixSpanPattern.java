@@ -38,7 +38,7 @@ public class PrefixSpanPattern {
 //        List<String> fileContent=ReaderFileLine.getFileContent(path);
         GetData getData=new GetData();
         List<String> fileContent=getData.GetDataFromDataBase();
-        System.out.println("获取数据库的数据"+fileContent);
+//        System.out.println("获取数据库的数据"+fileContent);
 
         //transfer data to 3 dimension data
 
@@ -78,21 +78,21 @@ public class PrefixSpanPattern {
             //把最后的pattern存入list
 //            if(!freqSeq.javaSequence().isEmpty()){
 //                //read the pattern result into list
-//            result.add(freqSeq.javaSequence() + ", " + freqSeq.freq()+"\r\n");
+            result.add(freqSeq.javaSequence() + ", " + freqSeq.freq()+"\r\n");
 //
 //            }
 //            freqSeq.javaSequence().removeAll(Collections.singleton("［ ］"));
 
 
-
-            result.add(freqSeq.javaSequence() + ", " + freqSeq.freq()+"\r\n");
+//            String s = freqSeq.javaSequence() + ", ";
+//            result.add(s.substring(1) + freqSeq.freq());
 
 //            System.out.println(freqSeq.javaSequence() + ", " + freqSeq.freq());
         }
 
         // $example off$
 
-        result.removeAll(Collections.singleton(",［[]］"));
+//        result.removeAll(Collections.singleton(",［[]］"));
         sc.stop();
         return result;
     }

@@ -59,12 +59,11 @@ public class GetData {
                     rs = stmt.executeQuery("select SESSION_ID,replace(replace(xml2clob(xmlagg(xmlelement(NAME a, METHOD_NAME||','))),'<A>',''),'</A>',' ') FROM\n" +
                             "mobsos.MONITORING where METHOD_NAME is not null and METHOD_NAME!='instantiateContext' and METHOD_NAME!='continueConnection' and METHOD_NAME!='testConnection' GROUP BY SESSION_ID");
 
-
+                    String s;
                     while (rs.next()) {
-//
-                        MethodNode.add(rs.getString("2"));
-//                       System.out.println(rs.getString("2"));
-//                       ListMethodNode.add(rs.getString("2"));
+
+                        s=rs.getString("2");
+                        MethodNode.add(s.substring(0,s.length()-1));
 
 
                     }
@@ -77,7 +76,7 @@ public class GetData {
 
         }
 //
-//        System.out.println(MethodNode);
+//       System.out.println(MethodNode+"\n");
         //list的形式返回数据
         return MethodNode;
     }
