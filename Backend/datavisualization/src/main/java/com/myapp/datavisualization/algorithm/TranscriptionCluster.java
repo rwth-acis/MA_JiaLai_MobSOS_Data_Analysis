@@ -31,16 +31,17 @@ public class TranscriptionCluster {
     public void getCluster() {
         // Create a Java Spark Context
         SparkConf conf = new SparkConf().setAppName("KMeans Example")
-                .setMaster("local[2]");// uncomment this if you are running on a
+                .setMaster("local").set("spark.driver.allowMultipleContexts", "true");// uncomment this if you are running on a
 
         // locally
         JavaSparkContext sc = new JavaSparkContext(conf);
         final HashingTF tf = new HashingTF(10000);
 //        String fileName = "/Users/Jia/Desktop/PsessionSave.txt";
 
-        GetData getData=new GetData();
+        GetData getData=new GetData("jdbc:db2://steen.informatik.rwth-aachen.de:50020/mobsos","stnV95DB","stdb2v95","com.ibm.db2.jcc.DB2Driver","select SESSION_ID,replace(replace(xml2clob(xmlagg(xmlelement(NAME a, METHOD_NAME||','))),'<A>',''),'</A>',' ') FROM\n" +
+                "mobsos.MONITORING where METHOD_NAME is not null and METHOD_NAME!='instantiateContext' and METHOD_NAME!='continueConnection' and METHOD_NAME!='testConnection' GROUP BY SESSION_ID");
         List<String> fileContent=getData.GetDataFromDataBase();
-//        System.out.println("获取数据库的数据"+fileContent);
+       System.out.println("获取数据库的数据"+fileContent);
         JavaRDD<String> list2data= sc.parallelize(fileContent);
         //根据数据特征进行数据处理
 //        JavaPairRDD<String, Vector> data = sc.textFile(fileName)
@@ -66,6 +67,10 @@ public class TranscriptionCluster {
         final IDFModel idf = new IDF().fit(points);
         // Transform to a vector with tfidf as weights
         JavaRDD<Vector> idfVectors = idf.transform(points).cache();
+
+        //开始时间计时
+        long startTime = System.currentTimeMillis();
+
         // Run Kmeans with K as 100, 300 iterations,  best of two runs, parallel kmeans++ to initialize centroids
         final KMeansModel model = KMeans.train(idfVectors.rdd(), K,MaxIterations, Runs,
                 KMeans.K_MEANS_PARALLEL());
@@ -88,9 +93,17 @@ public class TranscriptionCluster {
 //        clusteredData.groupByKey().saveAsTextFile(
 //                "clusterData/Session");
 
+        //时间计时结束
+        long endTime = System.currentTimeMillis();    //获取结束时间
+
+        System.out.println("程序运行时间：" + (endTime - startTime) + "ms");    //输出程序运行时间
+
         double cost = model.computeCost(points.rdd());
         System.out.println("Cost: " + cost);
         sc.close();
 //        return clusteredData;
+        System.out.println("hahaha");
+
+
     }
 }
