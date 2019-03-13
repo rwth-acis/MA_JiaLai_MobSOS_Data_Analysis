@@ -1,7 +1,4 @@
 package com.myapp.datavisualization.algorithm;
-
-import org.stringtemplate.v4.ST;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,22 +52,17 @@ public class GetData {
                     //sql从数据库里获取数据
                     rs = stmt.executeQuery(query);
 
-
                     String s;
                     while (rs.next()) {
 
                         s=rs.getString("2");
                         MethodNode.add(s.substring(0,s.length()-1));
-
-
                     }
 
                 }catch(SQLException e){
                     e.printStackTrace();
                 }
-
             }
-
         }
 
         //list的形式返回数据
