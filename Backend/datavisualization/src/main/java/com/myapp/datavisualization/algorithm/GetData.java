@@ -26,7 +26,6 @@ public class GetData {
         //jdbc.url=jdbc:mysql://localhost:3306/database
 //        String url = "jdbc:db2://steen.informatik.rwth-aachen.de:50020/mobsos";
 
-        // 用java实现数据库的操作
         Connection connection = null;
         Statement stmt=null;
         ResultSet rs=null;
@@ -49,7 +48,7 @@ public class GetData {
                 try {
                     stmt = connection.createStatement();
 
-                    //sql从数据库里获取数据
+                    //sql get data from database
                     rs = stmt.executeQuery(query);
 
                     String s;
@@ -65,7 +64,7 @@ public class GetData {
             }
         }
 
-        //list的形式返回数据
+        //list return data
         return MethodNode;
     }
 }

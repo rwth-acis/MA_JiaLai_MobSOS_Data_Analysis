@@ -10,7 +10,6 @@ public class Para  implements Serializable{
     private float MinSupport;
     private int MaxPatternLength;
 
-//
 //    public Para(int WIN_SIZE,int PAA_SIZE, int ALPHABET_SIZE, double NORM_THRESHOLD) {
 //        this.WIN_SIZE=WIN_SIZE;
 //        this.PAA_SIZE=PAA_SIZE;
@@ -30,8 +29,5 @@ public class Para  implements Serializable{
     public int  getMaxPatternLength(){
         return MaxPatternLength;
     }
-
-
-
 
 }

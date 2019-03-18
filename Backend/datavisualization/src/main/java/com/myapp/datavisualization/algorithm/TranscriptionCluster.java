@@ -37,7 +37,6 @@ public class TranscriptionCluster implements Serializable {
         // locally
         JavaSparkContext sc = new JavaSparkContext(conf);
         final HashingTF tf = new HashingTF(10000);
-//      String fileName = "/Users/Jia/Desktop/PsessionSave.txt";
 
         GetData getData=new GetData("jdbc:db2://steen.informatik.rwth-aachen.de:50020/mobsos","stnV95DB","stdb2v95","com.ibm.db2.jcc.DB2Driver","select SESSION_ID,replace(replace(xml2clob(xmlagg(xmlelement(NAME a, METHOD_NAME||','))),'<A>',''),'</A>',' ') FROM\n" +
                 "mobsos.MONITORING where METHOD_NAME is not null and METHOD_NAME!='instantiateContext' and METHOD_NAME!='continueConnection' and METHOD_NAME!='testConnection' GROUP BY SESSION_ID");
@@ -45,16 +44,14 @@ public class TranscriptionCluster implements Serializable {
         List<String> fileContent=getData.GetDataFromDataBase();
        // System.out.println("data from database:"+fileContent);
         JavaRDD<String> list2data= sc.parallelize(fileContent);
-        //根据数据特征进行数据处理
-//        JavaPairRDD<String, Vector> data = sc.textFile(fileName)
+        //Data processing based on data characteristics
+
         JavaPairRDD<String, Vector> data = list2data
                 .mapToPair(new PairFunction<String, String, Vector>() {
                     public Tuple2<String, Vector> call(String in)
                             throws Exception {
                         String line = in;
-//
                         String text = line.replace(",", " ");
-//                        System.out.println(text);
                         // Adding string tokens as feature vectors
                         List<String> annotations = new ArrayList<String>();
                         annotations.addAll(Arrays.asList(text.split(" ")));
@@ -70,7 +67,7 @@ public class TranscriptionCluster implements Serializable {
         // Transform to a vector with tfidf as weights
         JavaRDD<Vector> idfVectors = idf.transform(points).cache();
 
-        //开始时间计时
+        //beagin to count time
         long startTime = System.currentTimeMillis();
 
         // Run Kmeans with K as 100, 300 iterations,  best of two runs, parallel kmeans++ to initialize centroids
@@ -92,8 +89,7 @@ public class TranscriptionCluster implements Serializable {
                     }
 
                 }).cache();
-//       clusteredData.groupByKey().saveAsTextFile(
-//               "clusterData/Session");
+
         class comp implements Comparator<Integer>, Serializable {
 
             public int compare(Integer a, Integer b) {
@@ -113,47 +109,23 @@ public class TranscriptionCluster implements Serializable {
             }
             else{
                 i++;
-//                if (i>K){
-//                    break;
-//                }
 
-//                else{
                     AllPatternsString.add(patternString);
                     patternString.clear();
                     patternString.add(tuple._2);
-//                }
             }
         }
-//        System.out.println(patternString);
-
-
-//        JavaPairRDD<Integer, Iterable<String>> results = clusteredData.groupByKey();
-//
-//
-//               System.out.println(results.collect());
 
 
 
 
 
-//       File writename = new File("output1.txt"); // 相对路径，如果没有则要建立一个新的output。txt文件
-//            writename.createNewFile(); // 创建新文件
-//            BufferedWriter out = new BufferedWriter(new FileWriter(writename));
-//            out.write(clusteredData.groupByKey()); // \r\n即为换行
-//            out.flush(); // 把缓存区内容压入文件
-//            out.close(); // 最后记得关闭文件
-
-
-
-
-
-
-       // /************************************************************/
+        /************************************************************/
         //evaluation
-        //时间计时结束
-        long endTime = System.currentTimeMillis();    //获取结束时间
+        //end time count
+        long endTime = System.currentTimeMillis();    //get time
 
-        System.out.println("程序运行时间：" + (endTime - startTime) + "ms");    //输出程序运行时间
+        System.out.println("runtime of program：" + (endTime - startTime) + "ms");
 
         double cost = model.computeCost(points.rdd());
         System.out.println("Cost: " + cost);

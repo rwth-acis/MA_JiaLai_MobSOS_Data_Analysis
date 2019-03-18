@@ -25,24 +25,6 @@ public class PatternProcess {
 
         int numberOfPatterns=0;
 
-
-//        if(Length!="all"){
-//            length = Integer.parseInt(Length);
-//        }
-//        if(NumberOfPatterns!="all"){
-//            numberOfPatterns = Integer.parseInt(NumberOfPatterns);
-//        }
-
-//        //提取最后的数值排序
-//        List<String> nextList=new ArrayList<>();
-//        for(String sor:PatternResult){
-//            String strNext[]=sor.split(",");
-//            String next=strNext[strNext.length-1];
-//            System.out.println(next+"\n");
-//            nextList.add(next);
-//        }
-
-
         //get specific length of patterns
         for(String pattern : PatternResult){
             String str[] = pattern.split(",");
